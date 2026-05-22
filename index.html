@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bricolaje Sonoro™ — Composición desde el umbral del sueño</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%231a2e1a'/%3E%3Cpath d='M16 6c-4 3-7 8-7 13 0 2 1 4 3 5 1-3 2.5-5 4-7 1.5 2 3 4 4 7 2-1 3-3 3-5 0-5-3-10-7-13z' fill='%234a7c4a' opacity='0.9'/%3E%3Cpath d='M16 10c-2.5 2.5-4.5 6-4.5 10 0 1 .5 2.2 1.5 3 .8-2.5 1.8-4.5 3-6 1.2 1.5 2.2 3.5 3 6 1-.8 1.5-2 1.5-3 0-4-2-7.5-4.5-10z' fill='%236b9e6b' opacity='0.8'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --green-deep: #1a2e1a;
+            --green-dark: #2d4a2d;
+            --green-mid: #3d6b3d;
+            --green-soft: #4a7c4a;
+            --green-light: #6b9e6b;
+            --green-pale: #a8cca8;
+            --green-mist: #d4e8d4;
+            --cream: #f0efe8;
+            --cream-warm: #e8e6db;
+            --text-dark: #1a2e1a;
+            --text-body: #2d4a2d;
+            --text-light: #5a7d5a;
+            --text-muted: #8aaa8a;
+            --white: #fafaf6;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--white);
+            color: var(--text-body);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        ::selection {
+            background: var(--green-pale);
+            color: var(--green-deep);
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(250, 250, 246, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(45, 74, 45, 0.08);
+            transition: all 0.4s ease;
+        }
+
+        nav.scrolled {
+            padding: 1rem 3rem;
+            box-shadow: 0 2px 20px rgba(26, 46, 26, 0.06);
+        }
+
+        .nav-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: var(--green-deep);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 0.82rem;
+            font-weight: 400;
+            color: var(--text-light);
+            text-decoration: none;
+            letter-spacing: 0.06em;
+            text-transform: lowercase;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--green-deep);
+        }
+
+        /* ─── HAMBURGER ─── */
+        .nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 110;
+        }
+
+        .nav-toggle span {
+            display: block;
+            width: 22px;
+            height: 1.5px;
+            background: var(--green-deep);
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(4.5px, 4.5px);
+        }
+
+        .nav-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .nav-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(4.5px, -4.5px);
+        }
+
+        /* ─── HERO ─── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8rem 3rem 6rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(168, 204, 168, 0.12) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 30%, rgba(77, 124, 77, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .hero-label {
+            font-size: 0.72rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 2.5rem;
+            font-weight: 400;
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3rem, 7vw, 5.5rem);
+            font-weight: 300;
+            color: var(--green-deep);
+            line-height: 1.1;
+            margin-bottom: 1.8rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            font-weight: 300;
+            color: var(--green-mid);
+        }
+
+        .hero-subtitle {
+            font-size: 1.1rem;
+            font-weight: 300;
+            color: var(--text-light);
+            max-width: 520px;
+            line-height: 1.8;
+            margin-bottom: 3.5rem;
+        }
+
+        .hero-scroll {
+            font-size: 0.72rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            animation: gentle-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes gentle-pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* ─── SECTIONS ─── */
+        section {
+            padding: 7rem 3rem;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+        }
+
+        h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(2rem, 4vw, 2.8rem);
+            font-weight: 400;
+            color: var(--green-deep);
+            line-height: 1.25;
+            margin-bottom: 2rem;
+            letter-spacing: -0.01em;
+        }
+
+        .body-text {
+            font-size: 1rem;
+            font-weight: 300;
+            color: var(--text-body);
+            line-height: 1.85;
+            margin-bottom: 1.5rem;
+        }
+
+        .body-text strong {
+            font-weight: 500;
+            color: var(--green-deep);
+        }
+
+        /* ─── QUÉ ES ─── */
+        .que-es {
+            background: var(--white);
+            border-top: 1px solid rgba(45, 74, 45, 0.08);
+        }
+
+        /* ─── CIENCIA ─── */
+        .ciencia {
+            background: var(--green-deep);
+            color: var(--cream);
+            border-radius: 0;
+        }
+
+        .ciencia .section-label {
+            color: var(--green-pale);
+        }
+
+        .ciencia h2 {
+            color: var(--cream);
+        }
+
+        .ciencia .body-text {
+            color: var(--cream-warm);
+        }
+
+        .ciencia .body-text strong {
+            color: var(--white);
+        }
+
+        .evidence-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .evidence-item {
+            padding: 1.8rem;
+            border: 1px solid rgba(168, 204, 168, 0.15);
+            border-radius: 2px;
+        }
+
+        .evidence-item .ev-source {
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--green-pale);
+            margin-bottom: 0.8rem;
+            font-weight: 400;
+        }
+
+        .evidence-item p {
+            font-size: 0.92rem;
+            font-weight: 300;
+            color: var(--cream-warm);
+            line-height: 1.7;
+        }
+
+        /* ─── RESULTADO ─── */
+        .resultado {
+            background: var(--white);
+            border-top: 1px solid rgba(45, 74, 45, 0.08);
+        }
+
+        .resultado-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin-top: 2rem;
+            font-size: 0.92rem;
+            font-weight: 400;
+            color: var(--green-mid);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(61, 107, 61, 0.3);
+            padding-bottom: 0.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .resultado-link:hover {
+            color: var(--green-deep);
+            border-bottom-color: var(--green-deep);
+        }
+
+        .resultado-link .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .resultado-link:hover .arrow {
+            transform: translateX(4px);
+        }
+
+        /* ─── QUOTE ─── */
+        .resultado-content {
+            overflow: hidden;
+        }
+
+        .notebook-image {
+            float: right;
+            margin: 0.3rem 0 1.5rem 2.5rem;
+            max-width: 220px;
+        }
+
+        .notebook-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 2px;
+            filter: grayscale(15%) contrast(1.02);
+            box-shadow: 0 8px 40px rgba(26, 46, 26, 0.1);
+        }
+
+        .notebook-image figcaption {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 0.6rem;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .quote-section {
+            background: linear-gradient(135deg, rgba(212, 232, 212, 0.3) 0%, rgba(250, 250, 246, 1) 100%);
+            text-align: center;
+            padding: 8rem 3rem;
+        }
+
+        blockquote {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(1.4rem, 3vw, 2rem);
+            font-weight: 300;
+            font-style: italic;
+            color: var(--green-deep);
+            max-width: 640px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+
+        blockquote footer {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.78rem;
+            font-style: normal;
+            font-weight: 400;
+            color: var(--text-muted);
+            margin-top: 1.5rem;
+            letter-spacing: 0.08em;
+        }
+
+        /* ─── FOOTER ─── */
+        .contacto {
+            background: var(--white);
+            border-top: 1px solid rgba(45, 74, 45, 0.08);
+            text-align: center;
+        }
+
+        .contacto-email {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: var(--green-mid);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(61, 107, 61, 0.3);
+            padding-bottom: 0.15rem;
+            transition: all 0.3s ease;
+        }
+
+        .contacto-email:hover {
+            color: var(--green-deep);
+            border-bottom-color: var(--green-deep);
+        }
+
+        .contacto-note {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 1rem;
+            font-weight: 300;
+        }
+
+        footer {
+            padding: 3rem;
+            text-align: center;
+            border-top: 1px solid rgba(45, 74, 45, 0.08);
+        }
+
+        footer p {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            line-height: 1.9;
+        }
+
+        footer a {
+            color: var(--text-light);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(90, 125, 90, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        footer a:hover {
+            color: var(--green-deep);
+            border-bottom-color: var(--green-deep);
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 768px) {
+            nav { padding: 1.2rem 1.5rem; }
+            nav.scrolled { padding: 0.8rem 1.5rem; }
+
+            .nav-toggle { display: block; }
+
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 70%;
+                max-width: 280px;
+                height: 100vh;
+                flex-direction: column;
+                background: var(--white);
+                padding: 5rem 2rem 2rem;
+                gap: 2rem;
+                box-shadow: -4px 0 30px rgba(26, 46, 26, 0.08);
+                transition: right 0.35s ease;
+            }
+
+            .nav-links.open {
+                right: 0;
+            }
+
+            .nav-links a {
+                font-size: 1rem;
+                letter-spacing: 0.04em;
+            }
+
+            .nav-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(26, 46, 26, 0.2);
+                z-index: 99;
+            }
+
+            .nav-overlay.visible {
+                display: block;
+            }
+
+            section { padding: 5rem 1.5rem; }
+            .hero { padding: 7rem 1.5rem 5rem; }
+            .quote-section { padding: 5rem 1.5rem; }
+
+            .evidence-grid {
+                grid-template-columns: 1fr;
+                gap: 1.2rem;
+            }
+
+            .notebook-image {
+                float: none;
+                max-width: 100%;
+                margin: 0 0 1.5rem 0;
+            }
+        }
+
+        /* ─── ANIMATIONS ─── */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <a href="#" class="nav-logo">Bricolaje Sonoro</a>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#que-es">método</a></li>
+            <li><a href="#ciencia">ciencia</a></li>
+            <li><a href="#resultado">resultado</a></li>
+            <li><a href="#contacto">contacto</a></li>
+            <li><a href="https://hederamusica.es" target="_blank">hedera</a></li>
+        </ul>
+        <button class="nav-toggle" id="navToggle" aria-label="Menú">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+    <div class="nav-overlay" id="navOverlay"></div>
+
+    <!-- HERO -->
+    <section class="hero">
+        <p class="hero-label">Método de composición musical</p>
+        <h1>Bricolaje<br><em>Sonoro</em>™</h1>
+        <p class="hero-subtitle">
+            Componer con los materiales que el cerebro genera 
+            al borde del sueño. Fragmentos capturados en la transición 
+            entre vigilia y sueño, transformados en canciones.
+        </p>
+        <a href="#que-es" class="hero-scroll">↓</a>
+    </section>
+
+    <!-- QUÉ ES -->
+    <section class="que-es" id="que-es">
+        <div class="container">
+            <p class="section-label fade-in">El método</p>
+            <h2 class="fade-in">Composición desde el estado liminal</h2>
+
+            <p class="body-text fade-in">
+                En la transición entre la vigilia y el sueño, el cerebro genera contenido espontáneo: frases, imágenes, neologismos, melodías. La neurociencia los llama <strong>estados hipnagógicos</strong>. Ocurren en la fase N1 del sueño NREM — una ventana temporal breve donde la actividad asociativa se dispara y la inhibición prefrontal se relaja.
+            </p>
+
+            <p class="body-text fade-in">
+                Bricolaje Sonoro™ es un método que captura ese material y lo transforma en canciones a través de un proceso sistemático de seis pasos. El término viene de Lévi-Strauss: el <em>bricoleur</em> trabaja con los materiales que tiene a mano. En este caso, los materiales son fragmentos generados por el cerebro al borde del sueño.
+            </p>
+
+            <p class="body-text fade-in">
+                El método no propone un mecanismo nuevo. Lo que propone es una <strong>sistematización del proceso creativo liminal</strong>: convertir lo que históricamente se ha tratado como inspiración aleatoria — la «musa» — en un protocolo de ingeniería cognitiva replicable y auditable.
+            </p>
+        </div>
+    </section>
+
+    <!-- CIENCIA -->
+    <section class="ciencia" id="ciencia">
+        <div class="container">
+            <p class="section-label fade-in">Base científica</p>
+            <h2 class="fade-in">Fundamentación, no especulación</h2>
+
+            <p class="body-text fade-in">
+                Bricolaje Sonoro se apoya en evidencia publicada en revistas científicas indexadas. La fase N1 del sueño es un estado neurocognitivo estudiado, no un territorio místico. El método utiliza mecanismos documentados — no los extrapola.
+            </p>
+
+            <div class="evidence-grid fade-in">
+                <div class="evidence-item">
+                    <p class="ev-source">Science Advances, 2021</p>
+                    <p>Pasar al menos 15 segundos en N1 triplica la probabilidad de insight creativo. El efecto desaparece en sueño más profundo.</p>
+                </div>
+                <div class="evidence-item">
+                    <p class="ev-source">Consciousness and Cognition, 2020</p>
+                    <p>El dispositivo Dormio (MIT Media Lab) demuestra que N1 es permeable a inputs verbales previos y que el contenido es reportable al despertar.</p>
+                </div>
+                <div class="evidence-item">
+                    <p class="ev-source">Neuroscience of Consciousness, 2017</p>
+                    <p>Los microsueños generan contenido sensorial original — incluido contenido auditivo y melódico — no disponible en vigilia.</p>
+                </div>
+                <div class="evidence-item">
+                    <p class="ev-source">Journal of Abnormal Psychology, 1974</p>
+                    <p>El rasgo de absorción (Tellegen) correlaciona con experiencias hipnagógicas más frecuentes y elaboradas. Es predisponente, no requisito.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RESULTADO -->
+    <section class="resultado" id="resultado">
+        <div class="container">
+            <p class="section-label fade-in">Prueba de concepto</p>
+            <h2 class="fade-in">Las canciones existen</h2>
+
+            <div class="resultado-content fade-in">
+                <figure class="notebook-image">
+                    <img src="notebook.jpg" alt="Cuaderno abierto con la letra de una canción escrita a mano, junto a una guitarra">
+                    <figcaption>«Que bebe agua en el cielo». Cuaderno, lápiz y guitarra.</figcaption>
+                </figure>
+
+                <p class="body-text">
+                    El protocolo ha generado un corpus de más de 1.900 registros hipnagógicos a lo largo de más de un año. De ese material han salido cuatro canciones compuestas con material liminal — dos de ellas construidas al 100% con material onírico: toda la letra, la melodía y el bridge capturados en estados hipnagógicos e hipnopómpicos. Las otras dos incorporan material liminal sustancial en letra y música.
+                </p>
+
+                <p class="body-text">
+                    Las canciones se publican bajo el nombre artístico <strong>Hedera</strong>™ — un proyecto de cantautor donde el método se convierte en música real. Guitarra española, voz, y nada más. Sin metrónomo. Con rubato expresivo.
+                </p>
+
+                <a href="https://hederamusica.es" class="resultado-link">
+                    Escuchar las canciones en hederamusica.es <span class="arrow">→</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUOTE -->
+    <section class="quote-section">
+        <blockquote class="fade-in">
+            «Convertir lo que históricamente se ha tratado como inspiración aleatoria en un protocolo de ingeniería cognitiva replicable y auditable.»
+            <footer>— Del documento fundacional de Bricolaje Sonoro</footer>
+        </blockquote>
+    </section>
+
+    <!-- CONTACTO -->
+    <section class="contacto" id="contacto">
+        <div class="container">
+            <p class="section-label fade-in">Contacto</p>
+            <h2 class="fade-in">Escríbenos</h2>
+            <a href="mailto:gestion@bricolajesonoro.com" class="contacto-email fade-in">gestion@bricolajesonoro.com</a>
+            <p class="contacto-note fade-in">Para cualquier cosa. Sin prisas.</p>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>
+            © 2026 Bricolaje Sonoro™ — Todos los derechos reservados
+            <br>
+            Bricolaje Sonoro™ es marca registrada ante la Oficina Española de Patentes y Marcas (Clase 41)
+            <br>
+            Documento fundacional registrado en el Registro de la Propiedad Intelectual de España
+            <br><br>
+            <a href="https://hederamusica.es">hederamusica.es</a> · bricolajesonoro.es
+        </p>
+    </footer>
+
+    <!-- JS -->
+    <script>
+        // Nav scroll effect
+        const nav = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 60);
+        });
+
+        // Hamburger menu
+        const toggle = document.getElementById('navToggle');
+        const links = document.getElementById('navLinks');
+        const overlay = document.getElementById('navOverlay');
+
+        function closeMenu() {
+            toggle.classList.remove('active');
+            links.classList.remove('open');
+            overlay.classList.remove('visible');
+            document.body.style.overflow = '';
+        }
+
+        toggle.addEventListener('click', () => {
+            const isOpen = links.classList.contains('open');
+            if (isOpen) {
+                closeMenu();
+            } else {
+                toggle.classList.add('active');
+                links.classList.add('open');
+                overlay.classList.add('visible');
+                document.body.style.overflow = 'hidden';
+            }
+        });
+
+        overlay.addEventListener('click', closeMenu);
+
+        links.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', closeMenu);
+        });
+
+        // Fade-in on scroll
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    </script>
+
+</body>
+</html>
